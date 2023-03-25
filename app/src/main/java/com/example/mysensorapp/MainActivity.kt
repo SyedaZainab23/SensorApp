@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     private lateinit var sensorManager: SensorManager
     private lateinit var accelerometerSensor: Sensor
-    private var isWalking = false
+    private var isWalking = true
     private var state = "Walking"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,19 +29,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             // below we have created
             // a new DBHelper class,
             // and passed context to it
-        val db = DBHelper(this, null)
-
-            // creating variables for values
-            // in name and age edit texts
-        val name = "enterName.text.toString()"
-        val age = "1234567890"
-        val activity = state
-            // calling method to add
-            // name to our database
-        db.addName(name, age, activity)
-
-            // Toast to message on the screen
-        Toast.makeText(this, name + " added to database", Toast.LENGTH_LONG).show()
 
 
     }
@@ -60,24 +47,44 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         // Do nothing
-    }
+ }
 
     override fun onSensorChanged(event: SensorEvent?) {
         event?.let {
             if (it.sensor == accelerometerSensor) {
                 val acceleration = sqrt(it.values[0] * it.values[0] + it.values[1] * it.values[1] + it.values[2] * it.values[2])
-                if (acceleration > 11) {
+                if (!isWalking && acceleration > 11) {
                     isWalking = true
                     state="Walking"
                     showToast(this, "WALKING!")
+                    storeinDB()
                     // Do something when walking is detected
-                } else if (acceleration < 11) {
+                } else if (acceleration < 11 && isWalking) {
+
                     isWalking = false
                     state="Still"
                     showToast(this, "STILL!")
                     // Do something when stillness is detected
+                    storeinDB()
                 }
             }
         }
+
+    }
+    fun storeinDB(){
+        val db = DBHelper(this, null)
+
+        // creating variables for values
+        // in name and age edit texts
+        val name = "check"
+        val age = "1234567890"
+        val activity = state
+        // calling method to add
+        // name to our database
+        db.addName(name, age, activity)
+
+        // Toast to message on the screen
+        Toast.makeText(this, name + " added to database", Toast.LENGTH_LONG).show()
+
     }
 }
