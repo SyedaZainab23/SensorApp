@@ -1,4 +1,6 @@
 package com.example.mysensorapp
+import android.annotation.SuppressLint
+import java.time.LocalDateTime
 
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -18,6 +20,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private lateinit var accelerometerSensor: Sensor
     private var isWalking = true
+    private var isRunning = false
+    private var isDriving = false
     private var state = "Walking"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +57,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         event?.let {
             if (it.sensor == accelerometerSensor) {
                 val acceleration = sqrt(it.values[0] * it.values[0] + it.values[1] * it.values[1] + it.values[2] * it.values[2])
-                if (!isWalking && acceleration > 11) {
+                //time1=LocalDateTime.now().toString()
+                if (!isWalking && acceleration > 11 && acceleration < 18) {
                     isWalking = true
                     state="Walking"
                     showToast(this, "WALKING!")
@@ -67,24 +72,40 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     // Do something when stillness is detected
                     storeinDB()
                 }
-            }
-        }
+                else if (acceleration < 25 && acceleration> 18 && !isRunning) {
 
-    }
+                    isWalking = false
+                    state="Running"
+                    showToast(this, "RUNNING!")
+                    // Do something when stillness is detected
+                    storeinDB()
+
+            }
+                else if (acceleration > 25 && !isDriving) {
+
+                    isWalking = false
+                    state="Driving"
+                    showToast(this, "DRIVING!")
+                    // Do something when stillness is detected
+                    storeinDB()
+
+                }}
+        }}
+    @SuppressLint("NewApi")
     fun storeinDB(){
         val db = DBHelper(this, null)
 
         // creating variables for values
         // in name and age edit texts
-        val name = "check"
-        val age = "1234567890"
+        val time = LocalDateTime.now().toString()
+        val slot = "1234567890"
         val activity = state
         // calling method to add
         // name to our database
-        db.addName(name, age, activity)
+        db.addName(time, slot, activity)
 
         // Toast to message on the screen
-        Toast.makeText(this, name + " added to database", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, state + " added to database", Toast.LENGTH_LONG).show()
 
-    }
-}
+
+}}
