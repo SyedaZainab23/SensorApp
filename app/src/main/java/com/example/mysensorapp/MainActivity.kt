@@ -71,7 +71,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     var time2 = LocalDateTime.now()
                     val duration = Duration.between(time1, time2)
                     time1=time2
-                    storeinDB(duration.toString())
+                    val x= duration.seconds
+                    storeinDB(x.toString())
                     isDriving=false
                     isStill=false
                     isRunning=false
@@ -85,7 +86,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     var time2 = LocalDateTime.now()
                     val duration = Duration.between(time1, time2)
                     time1=time2
-                    storeinDB(duration.toString())
+                    val x= duration.seconds
+                    storeinDB(x.toString())
                     isDriving=false
                     isWalking=false
                     isRunning=false
@@ -100,7 +102,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     var time2 = LocalDateTime.now()
                     val duration = Duration.between(time1, time2)
                     time1=time2
-                    storeinDB(duration.toString())
+                    val x= duration.seconds
+                    storeinDB(x.toString())
                     isDriving=false
                     isStill=false
                     isWalking=false
@@ -116,7 +119,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     var time2 = LocalDateTime.now()
                     val duration = Duration.between(time1, time2)
                     time1=time2
-                    storeinDB(duration.toString())
+                    val x= duration.seconds
+                    storeinDB(x.toString())
                     isWalking=false
                     isStill=false
                     isRunning=false

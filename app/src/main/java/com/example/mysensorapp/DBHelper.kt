@@ -76,13 +76,13 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         // here we have defined variables for our database
 
         // below is variable for database name
-        private val DATABASE_NAME = "DATA"
+        private val DATABASE_NAME = "DATAAAA_Syeda"
 
         // below is the variable for database version
         private val DATABASE_VERSION = 1
 
         // below is the variable for table name
-        val TABLE_NAME = "table2"
+        val TABLE_NAME = "table3"
 
         // below is the variable for id column
         val ID_COL = "id"
