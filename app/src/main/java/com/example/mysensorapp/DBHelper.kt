@@ -31,7 +31,7 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
     }
 
     // This method is for adding data in our database
-    fun addName(name: String, age: String, activity: String){
+    fun addName(time: String, slot: String, activity: String){
 
         // below we are creating
         // a content values variable
@@ -39,8 +39,8 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
         // we are inserting our values
         // in the form of key-value pair
-        values.put(TIME_COL, name)
-        values.put(SLOT_COL, age)
+        values.put(TIME_COL, time)
+        values.put(SLOT_COL, slot)
         values.put(ACT_COL, activity)
 
         // here we are creating a
@@ -76,13 +76,13 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         // here we have defined variables for our database
 
         // below is variable for database name
-        private val DATABASE_NAME = "SYEDA"
+        private val DATABASE_NAME = "DATA"
 
         // below is the variable for database version
         private val DATABASE_VERSION = 1
 
         // below is the variable for table name
-        val TABLE_NAME = "table1"
+        val TABLE_NAME = "table2"
 
         // below is the variable for id column
         val ID_COL = "id"

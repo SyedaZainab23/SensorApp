@@ -1,7 +1,7 @@
 package com.example.mysensorapp
 import android.annotation.SuppressLint
 import java.time.LocalDateTime
-
+import java.time.Duration
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -10,7 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import kotlin.math.sqrt
 import android.content.Context
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 
 fun showToast(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
@@ -19,11 +21,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     private lateinit var sensorManager: SensorManager
     private lateinit var accelerometerSensor: Sensor
-    private var isWalking = true
+    private var isStill = true
+    private var isWalking = false
     private var isRunning = false
     private var isDriving = false
     private var state = "Walking"
-
+    @RequiresApi(Build.VERSION_CODES.O)
+    var time1 = LocalDateTime.now()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -53,52 +57,81 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         // Do nothing
  }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onSensorChanged(event: SensorEvent?) {
         event?.let {
+
             if (it.sensor == accelerometerSensor) {
                 val acceleration = sqrt(it.values[0] * it.values[0] + it.values[1] * it.values[1] + it.values[2] * it.values[2])
-                //time1=LocalDateTime.now().toString()
+                //var time1 = LocalDateTime.now()
                 if (!isWalking && acceleration > 11 && acceleration < 18) {
                     isWalking = true
                     state="Walking"
                     showToast(this, "WALKING!")
-                    storeinDB()
+                    var time2 = LocalDateTime.now()
+                    val duration = Duration.between(time1, time2)
+                    time1=time2
+                    storeinDB(duration.toString())
+                    isDriving=false
+                    isStill=false
+                    isRunning=false
                     // Do something when walking is detected
-                } else if (acceleration < 11 && isWalking) {
+                } else if (acceleration < 11 && !isStill) {
 
-                    isWalking = false
+                    isStill = true
                     state="Still"
                     showToast(this, "STILL!")
                     // Do something when stillness is detected
-                    storeinDB()
+                    var time2 = LocalDateTime.now()
+                    val duration = Duration.between(time1, time2)
+                    time1=time2
+                    storeinDB(duration.toString())
+                    isDriving=false
+                    isWalking=false
+                    isRunning=false
+
                 }
                 else if (acceleration < 25 && acceleration> 18 && !isRunning) {
 
-                    isWalking = false
+                    isRunning = true
                     state="Running"
                     showToast(this, "RUNNING!")
                     // Do something when stillness is detected
-                    storeinDB()
+                    var time2 = LocalDateTime.now()
+                    val duration = Duration.between(time1, time2)
+                    time1=time2
+                    storeinDB(duration.toString())
+                    isDriving=false
+                    isStill=false
+                    isWalking=false
 
-            }
+
+                }
                 else if (acceleration > 25 && !isDriving) {
 
-                    isWalking = false
+                    isDriving = true
                     state="Driving"
                     showToast(this, "DRIVING!")
                     // Do something when stillness is detected
-                    storeinDB()
+                    var time2 = LocalDateTime.now()
+                    val duration = Duration.between(time1, time2)
+                    time1=time2
+                    storeinDB(duration.toString())
+                    isWalking=false
+                    isStill=false
+                    isRunning=false
+
 
                 }}
         }}
     @SuppressLint("NewApi")
-    fun storeinDB(){
+    fun storeinDB(slot1: String){
         val db = DBHelper(this, null)
 
         // creating variables for values
         // in name and age edit texts
         val time = LocalDateTime.now().toString()
-        val slot = "1234567890"
+        val slot = slot1
         val activity = state
         // calling method to add
         // name to our database
