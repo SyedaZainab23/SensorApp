@@ -142,7 +142,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         db.addName(time, slot, activity)
 
         // Toast to message on the screen
-        Toast.makeText(this, state + " added to database", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, state + " added to database with time  "+ slot+ " seconds ", Toast.LENGTH_LONG).show()
 
 
 }}
